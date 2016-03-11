@@ -27,7 +27,7 @@
     "storageAccountExistingRG" : {
       "type" : "string",
       "defaultValue" : ""
-    }
+    },
   },
   "resources": [],
   "outputs": {
