@@ -137,7 +137,7 @@
       "newStorageAccount": "[steps('panvnetconfig').newStorageAccount.name]",
       "storageAccountType": "[steps('panvnetconfig').newStorageAccount.type]",
       "storageAccountNewOrExisting" : "[steps('panvnetconfig').newStorageAccount.newOrExisting]",
-      "existingStorageAccountRG": "[steps('panvnetconfig').newstorageAccount.resourceGroup]",
+      "existingStorageAccountRG": "[steps('panvnetconfig').newStorageAccount.resourceGroup]",
       "dnsNameForPublicIP": "[steps('VMSeriesConfig').dnsNameForPublicIP.domainNameLabel]",
       "vmName": "[steps('VMSeriesConfig').vmName]",
       "adminUsername": "[basics('adminUsername')]",
