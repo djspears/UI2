@@ -96,21 +96,21 @@
     },
     "subnet0Name": {
       "type": "string",
-      "defaultValue": "shsubnet",
+      "defaultValue": "Mgmt",
       "metadata": {
         "description": "Subnet for the Mgmt"
       }
     },
     "subnet1Name": {
       "type": "string",
-      "defaultValue": "shsubnet",
+      "defaultValue": "Untrust",
       "metadata": {
         "description": "Subnet for the Untrust"
       }
     },
     "subnet2Name": {
       "type": "string",
-      "defaultValue": "idxsubnet",
+      "defaultValue": "Trust",
       "metadata": {
         "description": "Subnet for the Trust"
       }
@@ -180,7 +180,7 @@
     {
 	"name": "storageAcountSetup1",
 	"type": "Microsoft.Resources/deployments",
-        "apiVersion": "[variables('apiVersion')]",
+        "apiVersion": "2015-01-01",
 	"properties" : {
 		"mode": "Incremental",
 		"templateLink" : {
@@ -239,7 +239,7 @@
                     "protocol": "*",
                     "sourcePortRange": "*",
                     "destinationPortRange": "*",
-                    "sourceAddressPrefix": "[concat(parameters('ipAddressPrefix'), '.0.0/16')]",
+                    "sourceAddressPrefix": "[concat(parameters('virtualNetworkAddressPrefix'))]",
                     "destinationAddressPrefix": "*",
                     "access": "Allow",
                     "priority": 101,
