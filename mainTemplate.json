@@ -13,11 +13,11 @@
 	    "metadata": {
 		"description": "The type of the Storage Account created"
 	    },
-	    "defaultValue":"Standard_RAGRS"
+	    "defaultValue":"Standard_LRS"
 	},
         "storageAccountNewOrExisting" : {
             "type": "string",
-            "defaultValue" : "existing",
+            "defaultValue" : "new",
             "allowedValues" : [
                 "new",
                 "existing"
@@ -28,7 +28,7 @@
         },
         "existingStorageAccountRG": {
             "type": "string",
-            "defaultValue" : "smwest5",
+            "defaultValue" : "",
             "metadata": {
                "description": "Storage Resource Group of the Existing VM."
             }
@@ -73,55 +73,114 @@
                 "description": "Your source public IP address. Added to the inbound DefaultNSG on eth0 (MGMT)"
             }
         },
-        "ipAddressPrefix": {
-            "type": "string",
-            "defaultValue": "10.5",
-            "metadata": {
-                "description": "Default IP address space (/16) of the VNET"
-            }
-        },
         "baseUrl" : {
 		"type" : "string",
 		"metadata": {
 			"artifactsBaseUrl": ""
 		},
 		"defaultValue": "https://raw.githubusercontent.com/saurabhtrekker/UI1/master"
-	}
+	},
+    "virtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the virtual network that the consumer wants to use"
+      },
+      "defaultValue": "panVnet"
+    },
+    "virtualNetworkAddressPrefix": {
+      "type": "string",
+      "defaultValue": "192.168.0.0/16",
+      "metadata": {
+        "description": "Virtual network address CIDR"
+      }
+    },
+    "subnet0Name": {
+      "type": "string",
+      "defaultValue": "shsubnet",
+      "metadata": {
+        "description": "Subnet for the Mgmt"
+      }
+    },
+    "subnet1Name": {
+      "type": "string",
+      "defaultValue": "shsubnet",
+      "metadata": {
+        "description": "Subnet for the Untrust"
+      }
+    },
+    "subnet2Name": {
+      "type": "string",
+      "defaultValue": "idxsubnet",
+      "metadata": {
+        "description": "Subnet for the Trust"
+      }
+    },
+    "subnet0Prefix": {
+      "type": "string",
+      "defaultValue": "192.168.0.0/24",
+      "metadata": {
+        "description": "Mgmt subnet CIDR"
+      }
+    },
+    "subnet1Prefix": {
+      "type": "string",
+      "defaultValue": "192.168.1.0/24",
+      "metadata": {
+        "description": "Untrust subnet CIDR"
+      }
+    },
+    "subnet2Prefix": {
+      "type": "string",
+      "defaultValue": "192.168.2.0/24",
+      "metadata": {
+        "description": "Trust subnet CIDR"
+      }
+    },
+    "subnet0StartAddress": {
+      "type": "string",
+      "defaultValue": "192.168.0.4",
+      "metadata": {
+        "description": "Mgmt subnet start address"
+      }
+    },
+    "subnet1StartAddress": {
+      "type": "string",
+      "defaultValue": "192.168.1.4",
+      "metadata": {
+        "description": "Untrust subnet start address"
+      }
+    },
+    "subnet2StartAddress": {
+      "type": "string",
+      "defaultValue": "192.168.2.4",
+      "metadata": {
+        "description": "Trust subnet start address"
+      }
+    }
     },
     "variables": {
         "apiVersion": "2015-06-15",
         "location": "[resourceGroup().location]",
         "imagePublisher": "paloaltonetworks",
-	"imageSku" : "vmseriesbyol",
-	"imageOffer" : "vm-series-testpass1-preview",
-        "fwpublicIPName": "fwPublicIP",
-        "addNameToConcat": "PA-VM",
-        "nameToUse": "[trim(replace(variables('addNameToConcat'), ' ', '-'))]",
-        "vmName": "[concat('pan-vm-series-', variables('nameToUse'))]",
-        "virtualNetworkName": "[concat('fwVNET', variables('nameToUse'))]",
-        "addressPrefix": "[concat(parameters('ipAddressPrefix'), '.0.0/16')]",
-        "subnet0Name": "Mgmt",
-        "subnet0Prefix": "[concat(parameters('ipAddressPrefix'), '.0.0/24')]",
-        "subnet1Name": "Untrust",
-        "subnet1Prefix": "[concat(parameters('ipAddressPrefix'), '.1.0/24')]",
-        "subnet2Name": "Trust",
-        "subnet2Prefix": "[concat(parameters('ipAddressPrefix'), '.2.0/24')]",
+    	"imageSku" : "byol",
+	"imageOffer" : "vmseries-preview",
+        "fwpublicIPName": "fwMgmtPublicIP",
         "nicName": "eth",
-        "FWPrivateIPAddressUntrust": "[concat(parameters('ipAddressPrefix'), '.1.4')]",
-        "FWPrivateIPAddressTrust": "[concat(parameters('ipAddressPrefix'), '.2.4')]",
+        "FWPrivateIPAddressUntrust": "[parameters('subnet1StartAddress')]",
+        "FWPrivateIPAddressTrust": "[parameters('subnet2StartAddress')]",
         "publicIPAddressType": "Dynamic",
-        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('virtualNetworkName'))]",
         "nsgname-mgmt": "DefaultNSG",
-        "subnet0Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet0Name'))]",
-        "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
-        "subnet2Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet2Name'))]",
+        "subnet0Ref": "[concat(variables('vnetID'),'/subnets/',parameters('subnet0Name'))]",
+        "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',parameters('subnet1Name'))]",
+        "subnet2Ref": "[concat(variables('vnetID'),'/subnets/',parameters('subnet2Name'))]",
 	"storageAccountSetupURL" : "[concat(parameters('baseUrl'),'/storageAccount-',parameters('storageAccountNewOrExisting'),'.json')]"
     },
     "resources": [
     {
-	"name": "storageAcountSetup",
+	"name": "storageAcountSetup1",
 	"type": "Microsoft.Resources/deployments",
-	"apiVersion" : "2015-01-01",
+        "apiVersion": "[variables('apiVersion')]",
 	"properties" : {
 		"mode": "Incremental",
 		"templateLink" : {
@@ -204,7 +263,7 @@
     }, {
         "apiVersion": "[variables('apiVersion')]",
         "type": "Microsoft.Network/virtualNetworks",
-        "name": "[variables('virtualNetworkName')]",
+        "name": "[parameters('virtualNetworkName')]",
         "location": "[variables('location')]",
         "dependsOn": [
             "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgname-mgmt'))]"
@@ -212,26 +271,26 @@
         "properties": {
             "addressSpace": {
                 "addressPrefixes": [
-                    "[variables('addressPrefix')]"
+                    "[parameters('virtualNetworkAddressPrefix')]"
                 ]
             },
             "subnets": [{
-                "name": "[variables('subnet0Name')]",
+                "name": "[parameters('subnet0Name')]",
                 "properties": {
-                    "addressPrefix": "[variables('subnet0Prefix')]",
+                    "addressPrefix": "[parameters('subnet0Prefix')]",
                     "networkSecurityGroup": {
                         "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname-mgmt'))]"
                     }
                 }
             }, {
-                "name": "[variables('subnet1Name')]",
+                "name": "[parameters('subnet1Name')]",
                 "properties": {
-                    "addressPrefix": "[variables('subnet1Prefix')]"
+                    "addressPrefix": "[parameters('subnet1Prefix')]"
                 }
             }, {
-                "name": "[variables('subnet2Name')]",
+                "name": "[parameters('subnet2Name')]",
                 "properties": {
-                    "addressPrefix": "[variables('subnet2Prefix')]"
+                    "addressPrefix": "[parameters('subnet2Prefix')]"
                 }
             }]
         }
@@ -242,7 +301,7 @@
         "location": "[variables('location')]",
         "dependsOn": [
             "[concat('Microsoft.Network/publicIPAddresses/', variables('fwpublicIPName'))]",
-            "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
         ],
         "tags": {
             "displayName": "[concat('NetworkInterfaces', '0')]"
@@ -267,7 +326,7 @@
         "name": "[concat(variables('nicName'), '1')]",
         "location": "[variables('location')]",
         "dependsOn": [
-            "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
         ],
         "tags": {
             "displayName": "[concat('NetworkInterfaces', '1')]"
@@ -291,7 +350,7 @@
         "name": "[concat(variables('nicName'), '2')]",
         "location": "[variables('location')]",
         "dependsOn": [
-            "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]"
         ],
         "tags": {
             "displayName": "[concat('NetworkInterfaces', '2')]"
@@ -312,7 +371,7 @@
     }, {
         "apiVersion": "[variables('apiVersion')]",
         "type": "Microsoft.Compute/virtualMachines",
-        "name": "[variables('vmName')]",
+        "name": "[parameters('vmName')]",
         "location": "[variables('location')]",
         "plan": {
            "name": "[variables('imageSku')]",
@@ -320,7 +379,7 @@
            "publisher": "[variables('imagePublisher')]"
         },
         "dependsOn": [
-            "storageAcountSetup",
+            "storageAcountSetup1",
             "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), '0')]",
             "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), '1')]",
             "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), '2')]"
@@ -330,7 +389,7 @@
                 "vmSize": "[parameters('vmSize')]"
             },
             "osProfile": {
-                "computerName": "[variables('vmName')]",
+                "computerName": "[parameters('vmName')]",
                 "adminUsername": "[parameters('adminUsername')]",
                 "adminPassword": "[parameters('adminPassword')]"
             },
@@ -344,7 +403,7 @@
                 "osDisk": {
                     "name": "osdisk",
                     "vhd": {
-                        "uri": "[concat('http://',parameters('newStorageAccount'),'.blob.core.windows.net/vhds/', 'osdisk', '-firewall', '.vhd')]"
+                        "uri": "[concat('http://', parameters('newStorageAccount'), '.blob.core.windows.net/vhds/', parameters('vmName'), '-', variables('imageOffer'), '-', variables('imageSku'), '.vhd')]"
                     },
                     "caching": "ReadWrite",
                     "createOption": "FromImage"

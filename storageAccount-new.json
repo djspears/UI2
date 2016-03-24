@@ -22,7 +22,7 @@
       "metadata": {
         "Description": "The type of the Storage Account created"
       },
-      "defaultValue": "Premium_LRS"
+      "defaultValue": "Standard_LRS"
     },
     "storageAccountExistingRG" : {
       "type" : "string",
@@ -33,7 +33,7 @@
     {
 	"type": "Microsoft.Storage/storageAccounts",
 	"name": "[parameters('newStorageAccount')]",
-	"apiVersion": "2015-05-01-preview",
+	"apiVersion": "2015-06-15",
 	"location": "[parameters('location')]",
 	"properties": {
 		"accountType": "[parameters('storageAccountType')]"
