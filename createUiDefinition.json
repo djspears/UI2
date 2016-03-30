@@ -67,7 +67,7 @@
                },
                "defaultValue": {
                    "name": "panVnet",
-                   "addressPrefixSize": "/16"
+                   "addressPrefixSize": "192.168.0.0/16"
                },
                "constraints": {
                    "minAddressPrefixSize": "/16"
