@@ -67,7 +67,7 @@
                },
                "defaultValue": {
                    "name": "panVnet",
-                   "addressPrefixSize": "192.168.0.0/16"
+                   "addressPrefixSize": "/16"
                },
                "constraints": {
                    "minAddressPrefixSize": "/16"
@@ -119,7 +119,7 @@
                "defaultValue": "0.0.0.0/0",
         	"constraints": {
             	    "required": true,
-            	    "regex": " (/^([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])$/)",
+            	    "regex": "(^([0-9]{1,3}\.){3}[0-9]{1,3}($|/(|0|8|16|24|32))$)",
             	    "validationMessage": "0.0.0.0/0 or x.x.x.x/x"
          	}
             }
