@@ -12,25 +12,21 @@
       },
       {
         "name": "SSHCredntials",
-        "type": "Microsoft.Compute.CredentialsCombo",
+        "type": "Microsoft.Common.PasswordBox",
         "label": {
-                  "authenticationType": "Authentication type",
-                  "password": "Password",
-                  "confirmPassword": "Confirm password",
-                  "sshPublicKey": "SSH public key"
-                },
-        "toolTip": {
-                "authenticationType": "",
-                "password": "",
-                "sshPublicKey": ""
-              },
-         "constraints": {
-                "required": true
-              },
-         "options": {
-              "hideConfirmation": false
-         },
-	 "osPlatform": "Linux"
+          "password": "Password",
+          "confirmPassword": "Confirm password"
+        },
+        "toolTip": "Admin password for the Palo Alto Networks Firewall VM.",
+        "constraints": {
+          "required": true,
+          "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{6,72}$",
+          "validationMessage": "The password must be between 6 and 72 characters long, and contain characters from at least 3 of the following groups: uppercase characters, lowercase characters, numbers, and special characters."
+        },
+        "options": {
+          "hideConfirmation": false
+        },
+	"osPlatform": "Linux"
        }
     ],
     "steps": [
