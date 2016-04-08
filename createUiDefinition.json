@@ -12,21 +12,25 @@
       },
       {
         "name": "SSHCredntials",
-        "type": "Microsoft.Common.PasswordBox",
+        "type": "Microsoft.Compute.CredentialsCombo",
         "label": {
-          "password": "Password",
-          "confirmPassword": "Confirm password"
-        },
-        "toolTip": "Admin password for the VM-Series VM.",
-        "constraints": {
-          "required": true,
-          "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{6,72}$",
-          "validationMessage": "The password must be between 6 and 72 characters long, and contain characters from at least 3 of the following groups: uppercase characters, lowercase characters, numbers, and special characters."
-        },
-        "options": {
-          "hideConfirmation": false
-        },
-	"osPlatform": "Linux"
+                  "authenticationType": "Authentication type",
+                  "password": "Password",
+                  "confirmPassword": "Confirm password",
+                  "sshPublicKey": "SSH public key"
+                },
+        "toolTip": {
+                "authenticationType": "",
+                "password": "",
+                "sshPublicKey": ""
+              },
+         "constraints": {
+                "required": true
+              },
+         "options": {
+              "hideConfirmation": false
+         },
+	 "osPlatform": "Linux"
        }
     ],
     "steps": [
@@ -201,7 +205,9 @@
       "dnsNameForPublicIP": "[steps('VMSeriesConfig').dnsNameForPublicIP.domainNameLabel]",
       "vmName": "[steps('VMSeriesConfig').vmName]",
       "adminUsername": "[basics('adminUsername')]",
-      "adminPassword": "[basics('SSHCredntials')]",
+      "adminPassword": "[basics('SSHCredntials').password]",
+      "authenticationType": "[basics('SSHCredntials').authenticationType]",
+      "sshKey": "[basics('SSHCredntials').sshPublicKey]",
       "vmSize": "[steps('VMSeriesConfig').vmSize]",
       "srcIPInboundNSG": "[steps('panvnetconfig').srcIPInboundNSG]",
       "virtualNetworkName": "[steps('panvnetconfig').vnetSpec.name]",
