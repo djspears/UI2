@@ -7,7 +7,7 @@
         "name": "adminUsername",
         "type": "Microsoft.Compute.UserNameTextBox",
         "label": "Username",
-        "toolTip": "Username for Palo Alto Networks VM-Series next-generation firewall",
+        "toolTip": "Admin username for Palo Alto Networks VM-Series next-generation firewall",
 	"osPlatform": "Linux"
       },
       {
@@ -17,7 +17,7 @@
           "password": "Password",
           "confirmPassword": "Confirm password"
         },
-        "toolTip": "Admin password for the Palo Alto Networks Firewall VM.",
+        "toolTip": "Admin password for the VM-Series VM.",
         "constraints": {
           "required": true,
           "regex": "^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\\d\\W])|(?=.*\\W)(?=.*\\d))|(?=.*\\W)(?=.*[A-Z])(?=.*\\d)).{6,72}$",
@@ -62,7 +62,7 @@
 		"hideExisting" : true
                },
                "defaultValue": {
-                   "name": "panVnet",
+                   "name": "fwVNET",
                    "addressPrefixSize": "/16"
                },
                "constraints": {
@@ -111,7 +111,7 @@
                "name": "srcIPInboundNSG",
                "type": "Microsoft.Common.TextBox",
                "label": "Network Security Group: inbound source IP",
-               "toolTip": "Provide your source IP address (or range) to restrict access to public interfaces",
+               "toolTip": "Your source IP address (or range) to restrict access to public interfaces. Sets DefaultNSG.",
                "defaultValue": "0.0.0.0/0",
         	"constraints": {
             	    "required": true,
@@ -158,11 +158,11 @@
         "name": "vmName",
         "type": "Microsoft.Common.TextBox",
         "label": "VM name of VM-Series",
-        "toolTip": "VM name in resource group after deployment",
+        "toolTip": "VM name and hostname in resource group after deployment",
         "constraints": {
             "required": true,
             "regex": "^[a-z0-9]{8,24}$",
-            "validationMessage": "Cluster names must be between 8 and 24 characters long, and can contain only numbers and lowercase letters."
+            "validationMessage": "VM names must be between 8 and 24 characters long, and can contain only numbers and lowercase letters."
          }
        },
           {
@@ -177,13 +177,16 @@
             "constraints": {
               "allowedSizes": [
                 "Standard_D3",
-                "Standard_D4"
-              ]
+                "Standard_D3_v2",
+                "Standard_D4",
+                "Standard_D4_v2",
+                "Standard_A4"                  
+                ]
             },
 	    "osPlatform": "Linux",
             "imageReference": {
               "publisher": "paloaltonetworks",
-              "offer": "vmseries-preview",
+              "offer": "vmseries1-preview",
               "sku": "byol"
             }
           }
@@ -198,7 +201,7 @@
       "dnsNameForPublicIP": "[steps('VMSeriesConfig').dnsNameForPublicIP.domainNameLabel]",
       "vmName": "[steps('VMSeriesConfig').vmName]",
       "adminUsername": "[basics('adminUsername')]",
-      "adminPassword": "[basics('SSHCredntials').password]",
+      "adminPassword": "[basics('SSHCredntials')]",
       "vmSize": "[steps('VMSeriesConfig').vmSize]",
       "srcIPInboundNSG": "[steps('panvnetconfig').srcIPInboundNSG]",
       "virtualNetworkName": "[steps('panvnetconfig').vnetSpec.name]",
