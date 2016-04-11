@@ -53,6 +53,7 @@
         },
         "adminPassword": {
             "type": "securestring",
+	    "defaultValue": "",
             "metadata": {
                 "description": "Password for VM-Series administrator"
             }
