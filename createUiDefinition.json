@@ -198,6 +198,7 @@
       }
     ],
     "outputs": {
+      "location": "[location()]",
       "newStorageAccount": "[steps('panvnetconfig').newStorageAccount.name]",
       "storageAccountType": "[steps('panvnetconfig').newStorageAccount.type]",
       "storageAccountNewOrExisting" : "[steps('panvnetconfig').newStorageAccount.newOrExisting]",
