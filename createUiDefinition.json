@@ -1,5 +1,5 @@
-{
-  "handler": "Microsoft.Compute.MultiVm",
+
+  "handler": "Microsoft.Compute.MultiVm", 
   "version": "0.0.1-preview",
   "parameters": {
     "basics": [
@@ -7,7 +7,7 @@
         "name": "adminUsername",
         "type": "Microsoft.Compute.UserNameTextBox",
         "label": "Username",
-        "toolTip": "Admin username for Palo Alto Networks VM-Series next-generation firewall",
+        "toolTip": "Admin username for VM-Series",
 	"osPlatform": "Linux"
       },
       {
@@ -38,7 +38,7 @@
         "name": "panvnetconfig",
         "label": "Storage and Networking",
         "subLabel": {
-          "preValidation": "Configure PA-VM",
+          "preValidation": "New or existing resources",
           "postValidation": "Done"
         },
         "bladeTitle": "Storage and Networking",
@@ -49,6 +49,9 @@
                "label": "Storage Account Name",
                "defaultValue": {
                    "type": "Standard_LRS"
+               },
+               "constraints": {
+                   "allowedTypes": ["Standard_LRS","Standard_GRS","Standard_RAGRS"]
                }
             },
 	    {
@@ -59,18 +62,18 @@
                    "subnets": "Subnets"
                },
                "toolTip": {
-                   "virtualNetwork": "",
+                   "virtualNetwork": "To use an existing VNET, 3 subnets must already exist for Mgmt, Untrust and Trust. For a new VNET, the template will create them.",
                    "subnets": ""
                },
                "options": {
-		"hideExisting" : true
+		"hideExisting" : false
                },
                "defaultValue": {
                    "name": "fwVNET",
                    "addressPrefixSize": "/16"
                },
                "constraints": {
-                   "minAddressPrefixSize": "/16"
+                   "minAddressPrefixSize": "/24"
                },
                "subnets": {
                    "subnet0": {
@@ -80,7 +83,7 @@
                            "addressPrefixSize": "/24"
                        },
                        "constraints": {
-                           "minAddressPrefixSize": "/24",
+                           "minAddressPrefixSize": "/29",
                            "minAddressCount": 1,
                            "requireContiguousAddresses": true
                        }
@@ -92,7 +95,7 @@
                            "addressPrefixSize": "/24"
                        },
                        "constraints": {
-                           "minAddressPrefixSize": "/24",
+                           "minAddressPrefixSize": "/29",
                            "minAddressCount": 4,
                            "requireContiguousAddresses": true
                        }
@@ -104,7 +107,7 @@
                            "addressPrefixSize": "/24"
                        },
                        "constraints": {
-                           "minAddressPrefixSize": "/24",
+                           "minAddressPrefixSize": "/29",
                            "minAddressCount": 4,
                            "requireContiguousAddresses": true
                        }
@@ -129,7 +132,7 @@
         "name": "VMSeriesConfig",
         "label": "VM-Series Configuration",
         "subLabel": {
-          "preValidation": "Configure PA-VM",
+          "preValidation": "VM's size, name and DNS name ",
           "postValidation": "Done"
         },
         "bladeTitle": "VM-Series Configuration",
@@ -154,8 +157,8 @@
                 "domainNameLabel": ""
             },
             "options": {
-                "hideNone": true,
-		"hideExisting" : true
+                "hideNone": false,
+		"hideExisting" : false
             }
           },
        {
@@ -190,7 +193,7 @@
 	    "osPlatform": "Linux",
             "imageReference": {
               "publisher": "paloaltonetworks",
-              "offer": "vmseries1-preview",
+              "offer": "vmseries1",
               "sku": "byol"
             }
           }
@@ -199,11 +202,13 @@
     ],
     "outputs": {
       "location": "[location()]",
-      "newStorageAccount": "[steps('panvnetconfig').newStorageAccount.name]",
+      "storageAccountName": "[steps('panvnetconfig').newStorageAccount.name]",
       "storageAccountType": "[steps('panvnetconfig').newStorageAccount.type]",
       "storageAccountNewOrExisting" : "[steps('panvnetconfig').newStorageAccount.newOrExisting]",
-      "existingStorageAccountRG": "[steps('panvnetconfig').newStorageAccount.resourceGroup]",
-      "dnsNameForPublicIP": "[steps('VMSeriesConfig').dnsNameForPublicIP.domainNameLabel]",
+      "storageAccountExistingRG": "[steps('panvnetconfig').newStorageAccount.resourceGroup]",
+      "publicIPAddressName": "[steps('VMSeriesConfig').dnsNameForPublicIP.domainNameLabel]",
+      "PublicIPNewOrExisting": "[steps('VMSeriesConfig').dnsNameForPublicIP.newOrExistingOrNone]",
+      "PublicIPRGName": "[steps('VMSeriesConfig').dnsNameForPublicIP.resourceGroup]",
       "vmName": "[steps('VMSeriesConfig').vmName]",
       "adminUsername": "[basics('adminUsername')]",
       "adminPassword": "[basics('SSHCredntials').password]",
@@ -212,7 +217,9 @@
       "vmSize": "[steps('VMSeriesConfig').vmSize]",
       "srcIPInboundNSG": "[steps('panvnetconfig').srcIPInboundNSG]",
       "virtualNetworkName": "[steps('panvnetconfig').vnetSpec.name]",
+      "virtualNetworkExistingRGName": "[steps('panvnetconfig').vnetSpec.resourceGroup]",
       "virtualNetworkAddressPrefix": "[steps('panvnetconfig').vnetSpec.addressPrefix]",
+      "vnetNewOrExisting": "[steps('panvnetconfig').vnetSpec.newOrExisting]",
       "subnet0Name": "[steps('panvnetconfig').vnetSpec.subnets.subnet0.name]",
       "subnet1Name": "[steps('panvnetconfig').vnetSpec.subnets.subnet1.name]",
       "subnet2Name": "[steps('panvnetconfig').vnetSpec.subnets.subnet2.name]",
