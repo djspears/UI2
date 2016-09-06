@@ -111,6 +111,18 @@
                            "minAddressCount": 4,
                            "requireContiguousAddresses": true
                        }
+                   },
+                   "subnet3": {
+                       "label": "Restricted Subnet",
+                       "defaultValue": {
+                           "name": "Restricted",
+                           "addressPrefixSize": "/24"
+                       },
+                       "constraints": {
+                           "minAddressPrefixSize": "/29",
+                           "minAddressCount": 4,
+                           "requireContiguousAddresses": true
+                       }
                    }
                 }
 	    },
@@ -223,12 +235,15 @@
       "subnet0Name": "[steps('panvnetconfig').vnetSpec.subnets.subnet0.name]",
       "subnet1Name": "[steps('panvnetconfig').vnetSpec.subnets.subnet1.name]",
       "subnet2Name": "[steps('panvnetconfig').vnetSpec.subnets.subnet2.name]",
+      "subnet3Name": "[steps('panvnetconfig').vnetSpec.subnets.subnet3.name]",
       "subnet0Prefix": "[steps('panvnetconfig').vnetSpec.subnets.subnet0.addressPrefix]",
       "subnet1Prefix": "[steps('panvnetconfig').vnetSpec.subnets.subnet1.addressPrefix]",
       "subnet2Prefix": "[steps('panvnetconfig').vnetSpec.subnets.subnet2.addressPrefix]",
+      "subnet3Prefix": "[steps('panvnetconfig').vnetSpec.subnets.subnet3.addressPrefix]",
       "subnet0StartAddress": "[steps('panvnetconfig').vnetSpec.subnets.subnet0.startAddress]",
       "subnet1StartAddress": "[steps('panvnetconfig').vnetSpec.subnets.subnet1.startAddress]",
-      "subnet2StartAddress": "[steps('panvnetconfig').vnetSpec.subnets.subnet2.startAddress]"
+      "subnet2StartAddress": "[steps('panvnetconfig').vnetSpec.subnets.subnet2.startAddress]",
+      "subnet3StartAddress": "[steps('panvnetconfig').vnetSpec.subnets.subnet3.startAddress]"
     }
   }
 }
