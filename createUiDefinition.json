@@ -79,7 +79,7 @@
                    "subnet0": {
                        "label": "Management Subnet",
                        "defaultValue": {
-                           "name": "Mgmt",
+                           "name": "Mgmt1",
                            "addressPrefixSize": "/24"
                        },
                        "constraints": {
@@ -91,7 +91,7 @@
                    "subnet1": {
                        "label": "Untrust Subnet",
                        "defaultValue": {
-                           "name": "Untrust",
+                           "name": "Untrust1",
                            "addressPrefixSize": "/24"
                        },
                        "constraints": {
@@ -103,7 +103,7 @@
                    "subnet2": {
                        "label": "Trust Subnet",
                        "defaultValue": {
-                           "name": "Trust",
+                           "name": "Trust1",
                            "addressPrefixSize": "/24"
                        },
                        "constraints": {
@@ -115,7 +115,7 @@
                    "subnet3": {
                        "label": "Restricted Subnet",
                        "defaultValue": {
-                           "name": "Restricted",
+                           "name": "Restricted1",
                            "addressPrefixSize": "/24"
                        },
                        "constraints": {
